@@ -18,8 +18,8 @@
         android:gravity="center"
         android:padding="10dp"
         android:inputType="text"
+        android:text="diarmaid01"
         android:hint="Username">
-
         <requestFocus/>
     </EditText>
 
@@ -30,6 +30,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:inputType="textVisiblePassword"
+        android:text="8BKZ\"
         android:hint="Password"/>
 
     <Button

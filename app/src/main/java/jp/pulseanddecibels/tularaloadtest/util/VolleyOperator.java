@@ -1,6 +1,7 @@
 package jp.pulseanddecibels.tularaloadtest.util;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -55,6 +56,7 @@ public class VolleyOperator {
         Response.Listener ok = new Response.Listener() {
             @Override
             public void onResponse(Object response) {
+                Toast.makeText(context, "Logout Successful", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -62,6 +64,7 @@ public class VolleyOperator {
         Response.ErrorListener err = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Logout Failed", Toast.LENGTH_SHORT).show();
             }
         };
 
