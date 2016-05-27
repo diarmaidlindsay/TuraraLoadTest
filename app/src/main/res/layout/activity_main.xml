@@ -6,21 +6,39 @@
 
     <TextView
         android:id="@+id/text_status"
-        android:text="Waiting for call..."
+        android:padding="20dp"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/button_logout"
-        android:text="Logout"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/button_hangup"
+            android:text="Hangup"
+            style="@style/DialpadButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"/>
+        <Button
+            android:id="@+id/button_logout"
+            android:text="Logout"
+            style="@style/DialpadButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"/>
+    </LinearLayout>
+
+    <ToggleButton
+        android:id="@+id/button_speaker"
+        android:textOn="Speaker off"
+        android:textOff="Speaker on"
+        style="@style/DialpadButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
-    <Button
-        android:id="@+id/button_start_test"
-        android:text="Start Test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+    <include android:id="@+id/dialpad_content" layout="@layout/content_dialpad" android:visibility="visible"/>
 </LinearLayout>

@@ -43,13 +43,14 @@ public class LoginManager {
                     String json = response.toString();
                     asteriskAccount = new JsonParser().parseAsteriskAccount(json);
                 } catch (Exception ex) {
-                    Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
+                    MainActivity.me.displayToast(ex.getMessage(), Toast.LENGTH_LONG);
                     Log.e("LoginManager", "Error Parsing Asterisk Account 1");
                     return;
                 }
 
                 // 取得に成功した場合は、保存
                 asteriskAccount.save(mContext);
+                getLicenseKey(handler);
                 Intent intent = new Intent(mContext, MainActivity.class);
                 mContext.startActivity(intent);
             }
@@ -60,11 +61,65 @@ public class LoginManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LoginManager", "Error Parsing Asterisk Account 2");
-                Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
+                MainActivity.me.displayToast(error.getMessage(), Toast.LENGTH_LONG);
             }
         };
 
         // 通信開始
         VolleyOperator.getAsteriskAccount(mContext, ok, err);
+    }
+
+    private void getLicenseKey(final Handler handler) {
+        // 成功時
+        Response.Listener ok = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                // 取得したライセンスキーを登録
+                try {
+                    String json = response.toString();
+                    String licenceKey = new JsonParser().parseLicenceKey(json).trim();
+                    MainActivity.LIB_OP.setKey(licenceKey);
+                    new Setting().saveLicenceKey(mContext, licenceKey);
+                } catch (Exception ex) {
+                    MainActivity.me.displayToast("Error while getting License Key : "+ex.getMessage(), Toast.LENGTH_LONG);
+                    return;
+                }
+
+                // 少し遅らせAsteriskへログイン
+                Runnable run = new Runnable() {
+                    @Override
+                    public void run() {
+                        loginAsterisk(handler);
+                    }
+                };
+                handler.postDelayed(run, 1500);
+            }
+        };
+
+        // 失敗時
+        Response.ErrorListener err = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                MainActivity.me.displayToast("Error while getting license key", Toast.LENGTH_SHORT);
+            }
+        };
+
+        // 通信開始
+        VolleyOperator.getLicenceKey(mContext, ok, err);
+    }
+
+    private void loginAsterisk(final Handler handler) {
+        Setting setting = new Setting();
+        AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(mContext);
+        String user = asteriskAccount.sipId;
+        String pass = asteriskAccount.sipPass;
+        String server = setting.loadServerInfo(mContext);
+
+        // ログイン
+        boolean success = MainActivity.LIB_OP.login(user, pass, server);
+        if (!success) {
+            MainActivity.me.displayToast("Login to Asterisk Server failed", Toast.LENGTH_SHORT);
+            return;
+        }
     }
 }

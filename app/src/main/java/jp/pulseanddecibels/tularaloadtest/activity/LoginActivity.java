@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordField;
     Button loginButton;
 
-    private static final Handler HANDLER = new Handler();
+    private final Handler HANDLER = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

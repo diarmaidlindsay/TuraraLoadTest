@@ -7,7 +7,8 @@ android {
     defaultConfig {
         applicationId "jp.pulseanddecibels.tularaloadtest"
         minSdkVersion 14
-        targetSdkVersion 23
+        //if we target the latest Android, we have to rework the permission system
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

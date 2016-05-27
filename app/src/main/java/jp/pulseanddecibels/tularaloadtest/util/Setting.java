@@ -16,6 +16,7 @@ public class Setting {
     private static final String TAG_ASTERISK_ID = "TAG_ASTERISK_ID";
     private static final String TAG_ASTERISK_PASS = "TAG_ASTERISK_PASS";
     private static final String TAG_ASTERISK_GROUP_ID = "TAG_ASTERISK_GROUP_ID";
+    private static final String TAG_LICENCE_KEY = "LICENCE_KEY";
 
     public void saveAccount(Context context, String userName, String password) {
         File.saveData(context, TAG_USER_NAME, userName);
@@ -50,5 +51,9 @@ public class Setting {
 
     public String loadPassword(Context context) {
         return File.getValue(context, TAG_PASSWORD);
+    }
+
+    public void saveLicenceKey(Context context, String key) {
+        File.saveData(context, TAG_LICENCE_KEY, key);
     }
 }
