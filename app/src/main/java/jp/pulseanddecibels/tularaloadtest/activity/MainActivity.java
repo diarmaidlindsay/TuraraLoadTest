@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -22,14 +21,16 @@ import com.android.volley.VolleyError;
 import org.pjsip.pjsua2.CallInfo;
 
 import jp.pulseanddecibels.tularaloadtest.R;
+import jp.pulseanddecibels.tularaloadtest.data.AsteriskAccount;
+import jp.pulseanddecibels.tularaloadtest.data.TelNumber;
 import jp.pulseanddecibels.tularaloadtest.model.IncomingCallControl;
 import jp.pulseanddecibels.tularaloadtest.model.IncomingCallItem;
 import jp.pulseanddecibels.tularaloadtest.model.JsonParser;
 import jp.pulseanddecibels.tularaloadtest.model.LibOperator;
 import jp.pulseanddecibels.tularaloadtest.model.SoundPlayer;
-import jp.pulseanddecibels.tularaloadtest.data.TelNumber;
 import jp.pulseanddecibels.tularaloadtest.pjsip.TularaCall;
 import jp.pulseanddecibels.tularaloadtest.util.LoginManager;
+import jp.pulseanddecibels.tularaloadtest.util.Setting;
 import jp.pulseanddecibels.tularaloadtest.util.Util;
 import jp.pulseanddecibels.tularaloadtest.util.VibratorControl;
 import jp.pulseanddecibels.tularaloadtest.util.VolleyOperator;
@@ -39,23 +40,22 @@ import jp.pulseanddecibels.tularaloadtest.util.VolleyOperator;
  * Copyright Pulse and Decibels 2016
  */
 public class MainActivity extends AppCompatActivity {
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
-
-    Button logoutButton;
-    ToggleButton speakerButton;
-    Button hangupButton;
-    TextView testStatus;
-
-    public static MainActivity me = null;
     public final static LibOperator LIB_OP = new LibOperator();
     private static final Handler MAIN_HANDLER = new Handler();
-
+    public static MainActivity me = null;
     static AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
             //do nothing
         }
     };
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    Button logoutButton;
+    ToggleButton speakerButton;
+    Button hangupButton;
+    Button answerButton;
+    TextView testStatus;
+    IncomingCallItem callItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 updateStatus("Logging out...");
                 loginManager.logout();
+                LIB_OP.logout();
                 finish();
             }
         });
@@ -88,6 +89,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LIB_OP.endCall();
+            }
+        });
+
+        answerButton = (Button) findViewById(R.id.button_answer);
+        answerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callItem != null) {
+                    IncomingCallControl.INSTANCE.answerTo(callItem.callId, callItem.call);
+                } else {
+                    displayToast("No call to answer", Toast.LENGTH_SHORT);
+                }
             }
         });
 
@@ -127,9 +140,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetStatus() {
+        resetStatus(null);
+    }
+
+    public void resetStatus(final String status) {
+        Setting setting = new Setting();
+        AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(this);
+        final String user = asteriskAccount.sipId;
+
         MAIN_HANDLER.post(new Runnable() {
             public void run() {
-                updateStatus("Waiting for call...");
+                if (status != null) {
+                    updateStatus(status + ", " + user + " waiting for call...");
+                } else {
+                    updateStatus(user + " waiting for call...");
+                }
             }
         });
     }
@@ -145,10 +170,11 @@ public class MainActivity extends AppCompatActivity {
     public void setEventStartCall() {
         SoundPlayer.INSTANCE.stop();
         getAudioFocus(me);
+        updateStatus("On call");
     }
 
     public void setEventEndCall() {
-        updateStatus("Call ended, waiting for call...");
+        resetStatus("Call ended");
         SoundPlayer.INSTANCE.startSyuuryou(me.getApplicationContext());
         releaseAudioFocus(me);
     }
@@ -247,10 +273,8 @@ public class MainActivity extends AppCompatActivity {
         // 初回着信時は、着信画面を表示
         if (isFirstIncomingCall) {
 //            me.showIncomingCallActivity();
-            //Automatically answer in this test application
-            IncomingCallControl.INSTANCE.answerTo(callItem.callId, callItem.call);
-            updateStatus("In Call");
-
+            updateStatus("Incoming Call from " + callItem.telNum.getBaseString());
+            this.callItem = callItem;
             // 2回め以降の着信時は、着信画面を更新
         } else {
             displayToast("Ignored incoming call since there is already a call incoming", Toast.LENGTH_SHORT);
@@ -280,5 +304,10 @@ public class MainActivity extends AppCompatActivity {
 //		else {
 //			IncomingCallActivity.resetIncomingCallList();
 //		}
+    }
+
+    @Override
+    public void onBackPressed() {
+        logoutButton.performClick();
     }
 }

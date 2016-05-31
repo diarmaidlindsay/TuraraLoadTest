@@ -1,44 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_status"
-        android:padding="20dp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/button_hangup"
-            android:text="Hangup"
-            style="@style/DialpadButtons"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".50"/>
-        <Button
-            android:id="@+id/button_logout"
-            android:text="Logout"
-            style="@style/DialpadButtons"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".50"/>
-    </LinearLayout>
-
-    <ToggleButton
-        android:id="@+id/button_speaker"
-        android:textOn="Speaker off"
-        android:textOff="Speaker on"
-        style="@style/DialpadButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_hangup"
+            style="@style/DialpadButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"
+            android:text="Hangup"/>
+        <Button
+            android:id="@+id/button_answer"
+            style="@style/DialpadButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"
+            android:text="Answer"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/button_speaker"
+            style="@style/DialpadButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"
+            android:textOff="Speaker on"
+            android:textOn="Speaker off"/>
+
+        <Button
+            android:id="@+id/button_logout"
+            style="@style/DialpadButtons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".50"
+            android:text="Logout"/>
+    </LinearLayout>
+
 
     <include android:id="@+id/dialpad_content" layout="@layout/content_dialpad" android:visibility="visible"/>
 </LinearLayout>
