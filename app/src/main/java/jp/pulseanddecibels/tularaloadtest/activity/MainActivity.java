@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     ToggleButton speakerButton;
     Button hangupButton;
     Button answerButton;
+    Button callButton;
     TextView testStatus;
     IncomingCallItem callItem;
 
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         assert dialpad != null;
         final TextView numberField = (TextView) dialpad.findViewById(R.id.field_number_entry);
 
-        Button callButton = (Button) dialpad.findViewById(R.id.button_call);
+        callButton = (Button) dialpad.findViewById(R.id.button_call);
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
         testStatus = (TextView) findViewById(R.id.text_status);
         resetStatus();
+        changeButtonState(false);
     }
 
     public void updateStatus(final String text) {
@@ -171,12 +174,46 @@ public class MainActivity extends AppCompatActivity {
         SoundPlayer.INSTANCE.stop();
         getAudioFocus(me);
         updateStatus("On call");
+
+        changeButtonState(true);
     }
 
     public void setEventEndCall() {
         resetStatus("Call ended");
         SoundPlayer.INSTANCE.startSyuuryou(me.getApplicationContext());
         releaseAudioFocus(me);
+
+        changeButtonState(false);
+    }
+
+    private void changeButtonState(final boolean onCall) {
+        MAIN_HANDLER.post(new Runnable() {
+            public void run() {
+                if (onCall) {
+                    speakerButton.setEnabled(true);
+                    speakerButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                    hangupButton.setEnabled(true);
+                    hangupButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                    answerButton.setEnabled(false);
+                    answerButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                    logoutButton.setEnabled(false);
+                    logoutButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                    callButton.setEnabled(false);
+                    callButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                } else {
+                    speakerButton.setEnabled(false);
+                    speakerButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                    hangupButton.setEnabled(false);
+                    hangupButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                    answerButton.setEnabled(true);
+                    answerButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                    logoutButton.setEnabled(true);
+                    logoutButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                    callButton.setEnabled(true);
+                    callButton.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                }
+            }
+        });
     }
 
     private void getAudioFocus(Context context) {
@@ -308,6 +345,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        logoutButton.performClick();
+        if (logoutButton.isEnabled()) {
+            logoutButton.performClick();
+        }
     }
 }
