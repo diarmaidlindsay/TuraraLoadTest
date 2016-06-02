@@ -43,7 +43,7 @@ public class LoginManager {
                     String json = response.toString();
                     asteriskAccount = new JsonParser().parseAsteriskAccount(json);
                 } catch (Exception ex) {
-                    MainActivity.me.displayToast(ex.getMessage(), Toast.LENGTH_LONG);
+                    Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e("LoginManager", "Error Parsing Asterisk Account 1");
                     return;
                 }
@@ -61,7 +61,7 @@ public class LoginManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LoginManager", "Error Parsing Asterisk Account 2");
-                MainActivity.me.displayToast(error.getMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
             }
         };
 
@@ -81,7 +81,7 @@ public class LoginManager {
                     MainActivity.LIB_OP.setKey(licenceKey);
                     new Setting().saveLicenceKey(mContext, licenceKey);
                 } catch (Exception ex) {
-                    MainActivity.me.displayToast("Error while getting License Key : "+ex.getMessage(), Toast.LENGTH_LONG);
+                    Toast.makeText(mContext, "Error while getting License Key : " + ex.getMessage(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -100,7 +100,7 @@ public class LoginManager {
         Response.ErrorListener err = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                MainActivity.me.displayToast("Error while getting license key", Toast.LENGTH_SHORT);
+                Toast.makeText(mContext, "Error while getting License Key : " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         };
 
@@ -118,7 +118,7 @@ public class LoginManager {
         // ログイン
         boolean success = MainActivity.LIB_OP.login(user, pass, server);
         if (!success) {
-            MainActivity.me.displayToast("Login to Asterisk Server failed", Toast.LENGTH_SHORT);
+            Toast.makeText(mContext, "Login to Asterisk Server failed", Toast.LENGTH_LONG).show();
             return;
         }
     }
