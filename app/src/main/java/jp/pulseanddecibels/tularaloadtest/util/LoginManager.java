@@ -61,6 +61,7 @@ public class LoginManager {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LoginManager", "Error Parsing Asterisk Account 2");
+                error.printStackTrace();
                 Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
             }
         };

@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
         releaseAudioFocus(me);
 
         changeButtonState(false);
+
+        LIB_OP.setCurrentCall(null);
     }
 
     private void changeButtonState(final boolean onCall) {

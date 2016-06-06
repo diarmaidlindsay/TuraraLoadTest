@@ -23,20 +23,25 @@ public class UsersAdapter extends BaseAdapter {
 
     public UsersAdapter(Context context) {
         layoutInflater = LayoutInflater.from(context);
-        usersList.add(new User("admin", "DReA"));
-        usersList.add(new User("user", "Xsoz"));
-        usersList.add(new User("demouser01", "UTWT"));
-        usersList.add(new User("demouser02", "Jtd6"));
-        usersList.add(new User("testuser01", "BC7N"));
-        usersList.add(new User("testuser02", "Bb3F"));
-        usersList.add(new User("ueda01", "3L9C"));
-        usersList.add(new User("ueda02", "aDFK"));
-        usersList.add(new User("ueda03", "KpDP"));
-        usersList.add(new User("ueda04", "GMR6"));
-        usersList.add(new User("diarmaid01", "8BKZ"));
-        usersList.add(new User("diarmaid02", "YAsG"));
-        usersList.add(new User("diarmaid03", "tJPZ"));
-        usersList.add(new User("diarmaid04", "AjsD"));
+        usersList.add(new User("admin", "pass"));
+        usersList.add(new User("miyawaki", "pass"));
+        usersList.add(new User("otori", "pass"));
+        usersList.add(new User("ueda", "pass"));
+        usersList.add(new User("fujiwara", "pass"));
+        usersList.add(new User("tanemura", "pass"));
+        usersList.add(new User("haruki", "pass"));
+        usersList.add(new User("matsusue", "pass"));
+        usersList.add(new User("diarmaid", "pass"));
+        usersList.add(new User("hamatani", "pass"));
+        usersList.add(new User("morita", "pass"));
+        usersList.add(new User("soma", "pass"));
+        usersList.add(new User("sugimoto", "pass"));
+        usersList.add(new User("takahata", "pass"));
+        usersList.add(new User("user1", "pass"));
+        usersList.add(new User("user2", "pass"));
+        usersList.add(new User("user3", "pass"));
+        usersList.add(new User("user4", "pass"));
+        usersList.add(new User("user5", "pass"));
     }
 
     @Override
